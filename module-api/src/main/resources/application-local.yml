@@ -1,0 +1,6 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+    import:
+      - classpath:application-core-local.yml
