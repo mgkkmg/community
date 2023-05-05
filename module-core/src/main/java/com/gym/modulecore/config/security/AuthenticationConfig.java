@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,19 +25,14 @@ public class AuthenticationConfig {
     @Value("${jwt.secret-key}")
     private String key;
 
-    @Order(0)
-    @Bean
-    public SecurityFilterChain resources(HttpSecurity http) throws Exception {
-        return http.requestMatchers(matchers -> matchers
-                        .regexMatchers("^(?!/api/).*"))
-                .build();
-    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
+                .requestMatchers(matchers -> matchers
+                        .regexMatchers("^(?!/api/).*"))
                 .authorizeRequests(authorize -> authorize
-                        .antMatchers("/api/*/users/join", "/api/*/users/login").permitAll()
+//                        .regexMatchers("^(?!/api/).*").permitAll()
+                        .antMatchers(HttpMethod.POST, "/api/*/users/join", "/api/*/users/login").permitAll()
                         .antMatchers("/api/**").authenticated()
                 )
                 .sessionManagement(session -> session

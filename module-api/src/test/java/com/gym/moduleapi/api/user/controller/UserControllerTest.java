@@ -3,6 +3,7 @@ package com.gym.moduleapi.api.user.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gym.moduleapi.api.user.request.UserJoinRequest;
 import com.gym.moduleapi.api.user.request.UserLoginRequest;
+import com.gym.moduleapi.security.annotation.WithMockCustomUser;
 import com.gym.modulecore.core.user.model.User;
 import com.gym.modulecore.core.user.service.UserService;
 import com.gym.modulecore.exception.CommunityException;
@@ -120,7 +121,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void 알람기능() throws Exception {
         // mocking
         when(userService.alarmList(any(), any())).thenReturn(Page.empty());

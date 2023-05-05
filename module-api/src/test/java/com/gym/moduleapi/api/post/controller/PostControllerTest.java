@@ -4,11 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gym.moduleapi.api.post.request.PostCommentRequest;
 import com.gym.moduleapi.api.post.request.PostCreateRequest;
 import com.gym.moduleapi.api.post.request.PostModifyRequest;
+import com.gym.moduleapi.security.annotation.WithMockCustomUser;
 import com.gym.modulecore.core.post.model.Post;
 import com.gym.modulecore.core.post.service.PostService;
+import com.gym.modulecore.core.user.model.User;
+import com.gym.modulecore.core.user.model.entity.UserEntity;
 import com.gym.modulecore.exception.CommunityException;
 import com.gym.modulecore.exception.ErrorCode;
 import fixture.PostEntityFixture;
+import fixture.UserEntityFixture;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,10 +20,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -44,7 +54,7 @@ public class PostControllerTest {
     private PostService postService;
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void 포스트작성() throws Exception {
         String title = "title";
         String body = "body";
@@ -72,7 +82,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void 포스트수정() throws Exception {
         String title = "title";
         String body = "body";
@@ -104,7 +114,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void 포스트수정시_본인이_작성한_글이_아닌경우() throws Exception {
         String title = "title";
         String body = "body";
@@ -122,7 +132,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void 포스트수정시_수정하려는_글이_없는경우() throws Exception {
         String title = "title";
         String body = "body";
@@ -140,7 +150,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void 포스트삭제() throws Exception {
         mockMvc.perform(delete("/api/v1/posts/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -160,7 +170,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void 포스트삭제시_작성자와_삭제요청자가_다를경우() throws Exception {
         //mocking
         doThrow(new CommunityException(ErrorCode.INVALID_PERMISSION)).when(postService).delete(any(), any());
@@ -173,7 +183,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void 포스트삭제시_삭제하려는_글이_없는경우() throws Exception {
         //mocking
         doThrow(new CommunityException(ErrorCode.POST_NOT_FOUND)).when(postService).delete(any(), any());
@@ -212,7 +222,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void 내_피드목록() throws Exception {
         // mocking
         when(postService.my(any(), any())).thenReturn(Page.empty());
@@ -238,7 +248,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void 좋아요기능() throws Exception {
         mockMvc.perform(post("/api/v1/posts/1/likes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -258,7 +268,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void 좋아요_버튼클릭시_게시물이_없는경우() throws Exception {
         // mocking
         doThrow(new CommunityException(ErrorCode.POST_NOT_FOUND)).when(postService).like(any(), any());
@@ -284,7 +294,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void 댓글기능() throws Exception {
         mockMvc.perform(post("/api/v1/posts/1/comments")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -306,7 +316,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void 댓글작성시_게시물이_없는경우() throws Exception {
         // mocking
         doThrow(new CommunityException(ErrorCode.POST_NOT_FOUND)).when(postService).comment(any(), any(), any());
