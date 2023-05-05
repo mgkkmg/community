@@ -1,3 +1,8 @@
+tasks.bootJar {
+    archiveFileName = 'app.jar'
+    archiveVersion = '1.0.1'
+}
+
 dependencies {
     implementation project(':module-core')
     testImplementation(testFixtures(project(":module-core")))
