@@ -10,9 +10,9 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
-    url: jdbc:mysql://localhost:3306/community
-    username: root
-    password: root
+    url: jdbc:mysql://localhost:13306/community
+    username: ENC(Pz95pAXc82ztjV2nYizKcw==)
+    password: ENC(DXUafY6Wwez8jqvGrq6/9LqTw0gjtDjC)
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
@@ -28,7 +28,7 @@ spring:
           time_zone: Asia/Seoul # @CreatedDate 필드의 Time Zone 값 설정
 
 jwt:
-  secret-key: nas_ntels_suhyang_ezwel.community-2023.secret_key
+  secret-key: ENC(ndzgfjpjB0v3t01nqGLS1hYk3AJwaX3B0LSY0ojq3SphRUeurBqSzomPBDVB1sbtLzAW3+5LZ9vu0nsCcHEpBQ==)
   token:
     expired-time-ms: 2592000000 # 30days
 
@@ -41,8 +41,8 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     url: jdbc:mysql://localhost:3306/community
-    username: root
-    password: root
+    username: ENC(Pz95pAXc82ztjV2nYizKcw==)
+    password: ENC(DXUafY6Wwez8jqvGrq6/9LqTw0gjtDjC)
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
@@ -58,6 +58,6 @@ spring:
           time_zone: Asia/Seoul # @CreatedDate 필드의 Time Zone 값 설정
 
 jwt:
-  secret-key: nas_ntels_suhyang_ezwel.community-2023.secret_key
+  secret-key: ENC(ndzgfjpjB0v3t01nqGLS1hYk3AJwaX3B0LSY0ojq3SphRUeurBqSzomPBDVB1sbtLzAW3+5LZ9vu0nsCcHEpBQ==)
   token:
     expired-time-ms: 2592000000 # 30days

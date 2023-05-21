@@ -53,9 +53,9 @@ tasks.jar { enabled = true }
   ex) java -jar module-api-0.0.1-SNAPSHOT.jar
 [Multi Module에서 Gradle 빌드 명령어 + jar 파일 실행 CLI]
 - Gradle 빌드 명령어 :: root project
-  -> ./gradlew clean :module-api:buildNeeded --stacktrace --info --refresh-dependencies -x test
+  -> ./gradlew clean :module-api:buildNeeded -Pjasypt.encryptor.password=123 --stacktrace --info --refresh-dependencies -x test
 - profile 지정 X
-  -> java -jar module-api-0.0.1-SNAPSHOT.jar
+  -> java -jar module-api/build/libs/app.jar
 - profile 지정 O
-  -> java -jar -Dspring.profiles.active=local module-api-0.0.1-SNAPSHOT.jar
+  -> java -jar -Dspring.profiles.active=local -Djasypt.encryptor.password=123 module-api/build/libs/app.jar
  */
