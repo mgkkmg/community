@@ -4,6 +4,7 @@ import com.gym.modulecore.core.user.model.Alarm;
 import com.gym.modulecore.core.user.model.User;
 import com.gym.modulecore.core.user.model.entity.UserEntity;
 import com.gym.modulecore.core.user.repository.AlarmEntityRepository;
+import com.gym.modulecore.core.user.repository.UserCacheRepository;
 import com.gym.modulecore.core.user.repository.UserEntityRepository;
 import com.gym.modulecore.exception.CommunityException;
 import com.gym.modulecore.exception.ErrorCode;
@@ -23,6 +24,7 @@ public class UserService {
     private final UserEntityRepository userEntityRepository;
     private final AlarmEntityRepository alarmEntityRepository;
     private final BCryptPasswordEncoder encoder;
+    private final UserCacheRepository userCacheRepository;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -31,9 +33,11 @@ public class UserService {
     private Long expiredTimeMs;
 
     public User loadUserByUserName(String userName) {
-        return userEntityRepository.findByUserName(userName)
-                .map(User::fromEntity)
-                .orElseThrow(() -> new CommunityException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", userName)));
+        return userCacheRepository.getUser(userName).orElseGet(() ->
+                userEntityRepository.findByUserName(userName)
+                        .map(User::fromEntity)
+                        .orElseThrow(() -> new CommunityException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", userName)))
+        );
     }
 
     @Transactional
@@ -50,16 +54,19 @@ public class UserService {
 
     public String login(String userName, String password) {
         // 회원가입 여부 체크
-        UserEntity userEntity = userEntityRepository.findByUserName(userName)
-                .orElseThrow(() -> new CommunityException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", userName)));
+        User user = loadUserByUserName(userName);
+        userCacheRepository.setUser(user);
 
         // 비밀번호 체크
-        if (!encoder.matches(password, userEntity.getPassword())) {
+        if (!encoder.matches(password, user.getPassword())) {
             throw new CommunityException(ErrorCode.INVALID_PASSWORD);
         }
 
-        // 토큰 생성
+        // Auth 토큰 생성
         String token = JwtTokenUtils.generateToken(userName, secretKey, expiredTimeMs);
+
+        // TODO: Refresh 토큰 생성 => https://wildeveloperetrain.tistory.com/245 참고
+
         return token;
     }
 

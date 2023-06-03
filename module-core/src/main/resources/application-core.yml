@@ -26,6 +26,9 @@ spring:
         use_sql_comments: true
         jdbc:
           time_zone: Asia/Seoul # @CreatedDate 필드의 Time Zone 값 설정
+  redis:
+    host: localhost
+    port: 6379
 
 jwt:
   secret-key: ENC(ndzgfjpjB0v3t01nqGLS1hYk3AJwaX3B0LSY0ojq3SphRUeurBqSzomPBDVB1sbtLzAW3+5LZ9vu0nsCcHEpBQ==)
@@ -40,7 +43,7 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
-    url: jdbc:mysql://localhost:3306/community
+    url: jdbc:mysql://community-database:3306/community
     username: ENC(Pz95pAXc82ztjV2nYizKcw==)
     password: ENC(DXUafY6Wwez8jqvGrq6/9LqTw0gjtDjC)
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -56,6 +59,9 @@ spring:
         use_sql_comments: true
         jdbc:
           time_zone: Asia/Seoul # @CreatedDate 필드의 Time Zone 값 설정
+  redis:
+    host: community-redis
+    port: 6379
 
 jwt:
   secret-key: ENC(ndzgfjpjB0v3t01nqGLS1hYk3AJwaX3B0LSY0ojq3SphRUeurBqSzomPBDVB1sbtLzAW3+5LZ9vu0nsCcHEpBQ==)

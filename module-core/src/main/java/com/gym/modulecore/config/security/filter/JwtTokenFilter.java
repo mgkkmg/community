@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,18 +25,26 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final String key;
     private final UserService userService;
 
+    private final static List<String> TOKEN_IN_PARAM_URLS = List.of("/api/v1/users/alarm/subscribe");
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // get header
-        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (header == null || !header.startsWith("Bearer ")) {
-            log.error("Error occurs while getting header. Header is null or invalid {}", request.getRequestURL());
-            filterChain.doFilter(request, response);  // filterChain은 다음 필터를 가리키고 filterChain.doFilter()는 다음 필터를 호출한다.
-            return;
-        }
+        final String token;
 
         try {
-            final String token = header.split(" ")[1].trim();
+            if (TOKEN_IN_PARAM_URLS.contains(request.getRequestURI())) {
+                log.info("Request with {} check the query param", request.getRequestURI());
+                token = request.getQueryString().split("=")[1].trim();
+            } else {
+                // get header
+                final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+                if (header == null || !header.startsWith("Bearer ")) {
+                    log.info("Header is null or invalid {}", request.getRequestURL());
+                    filterChain.doFilter(request, response);  // filterChain은 다음 필터를 가리키고 filterChain.doFilter()는 다음 필터를 호출한다.
+                    return;
+                }
+                token = header.split(" ")[1].trim();
+            }
 
             // check token is valid
             if (JwtTokenUtils.isExpired(token, key)) {

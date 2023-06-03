@@ -28,7 +28,7 @@ public class AlarmEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // FetchType이 EAGER 인 경우 UserEntity가 조인으로 선언(private UserEntity user;)이 되어 있으면 무조건 해당 엔티티 쿼리를 호출하고
+    // FetchType이 EAGER 인 경우 UserEntity가 조인으로 선언(private UserEntity user;)이 되어 있으면 UserEntity가 사용되지 않더라도 무조건 해당 엔티티 쿼리를 호출하고
     // LAZY 인 경우 선언과 무관하게 실제 UserEntity를 사용할때 쿼리를 호출한다.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

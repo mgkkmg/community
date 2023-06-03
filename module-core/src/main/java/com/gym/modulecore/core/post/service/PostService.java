@@ -13,6 +13,7 @@ import com.gym.modulecore.core.user.model.entity.AlarmEntity;
 import com.gym.modulecore.core.user.model.entity.UserEntity;
 import com.gym.modulecore.core.user.model.enums.AlarmType;
 import com.gym.modulecore.core.user.repository.AlarmEntityRepository;
+import com.gym.modulecore.core.user.service.AlarmService;
 import com.gym.modulecore.exception.CommunityException;
 import com.gym.modulecore.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class PostService {
     private final LikeEntityRepository likeEntityRepository;
     private final CommentEntityRepository commentEntityRepository;
     private final AlarmEntityRepository alarmEntityRepository;
+    private final AlarmService alarmService;
 
     @Transactional
     public void create(String title, String body, Long userId) {
@@ -98,7 +100,8 @@ public class PostService {
         likeEntityRepository.save(LikeEntity.of(userEntity, postEntity));
 
         // like 후 post 작성자에게 알람 등록
-        alarmEntityRepository.save(AlarmEntity.of(postEntity.getUser(), AlarmType.NEW_COMMENT_ON_POST, new AlarmArgs(userEntity.getId(), postEntity.getId())));
+        AlarmEntity alarmEntity = alarmEntityRepository.save(AlarmEntity.of(postEntity.getUser(), AlarmType.NEW_COMMENT_ON_POST, new AlarmArgs(userEntity.getId(), postEntity.getId())));
+        alarmService.send(alarmEntity.getId(), postEntity.getUser().getId());
     }
 
     public Long likeCount(Long postId) {
@@ -118,7 +121,8 @@ public class PostService {
         // comment save
         commentEntityRepository.save(CommentEntity.of(userEntity, postEntity, comment));
         // comment 작성 후 post 작성자에게 알람 등록
-        alarmEntityRepository.save(AlarmEntity.of(postEntity.getUser(), AlarmType.NEW_LIKE_ON_POST, new AlarmArgs(userEntity.getId(), postEntity.getId())));
+        AlarmEntity alarmEntity = alarmEntityRepository.save(AlarmEntity.of(postEntity.getUser(), AlarmType.NEW_LIKE_ON_POST, new AlarmArgs(userEntity.getId(), postEntity.getId())));
+        alarmService.send(alarmEntity.getId(), postEntity.getUser().getId());
     }
 
     public Page<Comment> getComments(Long postId, Pageable pageable) {
