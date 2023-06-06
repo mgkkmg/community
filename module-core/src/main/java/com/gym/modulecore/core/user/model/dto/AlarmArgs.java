@@ -1,4 +1,4 @@
-package com.gym.modulecore.core.user.model;
+package com.gym.modulecore.core.user.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,11 +1,10 @@
 package com.gym.modulecore.core.user.service;
 
-import com.gym.modulecore.core.user.model.Alarm;
-import com.gym.modulecore.core.user.model.User;
+import com.gym.modulecore.core.user.model.dto.Alarm;
+import com.gym.modulecore.core.user.model.dto.TokenInfo;
+import com.gym.modulecore.core.user.model.dto.User;
 import com.gym.modulecore.core.user.model.entity.UserEntity;
-import com.gym.modulecore.core.user.repository.AlarmEntityRepository;
-import com.gym.modulecore.core.user.repository.UserCacheRepository;
-import com.gym.modulecore.core.user.repository.UserEntityRepository;
+import com.gym.modulecore.core.user.repository.*;
 import com.gym.modulecore.exception.CommunityException;
 import com.gym.modulecore.exception.ErrorCode;
 import com.gym.modulecore.util.JwtTokenUtils;
@@ -25,12 +24,20 @@ public class UserService {
     private final AlarmEntityRepository alarmEntityRepository;
     private final BCryptPasswordEncoder encoder;
     private final UserCacheRepository userCacheRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final LogoutTokenRepository logoutTokenRepository;
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
+    @Value("${jwt.token.access.secret-key}")
+    private String accessKey;
 
-    @Value("${jwt.token.expired-time-ms}")
-    private Long expiredTimeMs;
+    @Value("${jwt.token.refresh.secret-key}")
+    private String refreshKey;
+
+    @Value("${jwt.token.access.expired-time-ms}")
+    private Long accessExpiredTimeMs;
+
+    @Value("${jwt.token.refresh.expired-time-ms}")
+    private Long refreshExpiredTimeMs;
 
     public User loadUserByUserName(String userName) {
         return userCacheRepository.getUser(userName).orElseGet(() ->
@@ -52,7 +59,7 @@ public class UserService {
         return User.fromEntity(userEntity);
     }
 
-    public String login(String userName, String password) {
+    public TokenInfo login(String userName, String password) {
         // 회원가입 여부 체크
         User user = loadUserByUserName(userName);
         userCacheRepository.setUser(user);
@@ -63,11 +70,52 @@ public class UserService {
         }
 
         // Auth 토큰 생성
-        String token = JwtTokenUtils.generateToken(userName, secretKey, expiredTimeMs);
+        TokenInfo tokenInfo = JwtTokenUtils.generateToken(userName, accessKey, refreshKey, accessExpiredTimeMs, refreshExpiredTimeMs);
 
-        // TODO: Refresh 토큰 생성 => https://wildeveloperetrain.tistory.com/245 참고
+        // Refresh 토큰을 레디스에 저장
+        refreshTokenRepository.setRefreshToken(tokenInfo);
 
-        return token;
+        return tokenInfo;
+    }
+
+    public void logout(String accessToken, String userName) {
+        // 로그아웃 하고 싶은 토큰 유효성 검사
+        if (!JwtTokenUtils.isValidated(accessToken, accessKey)) {
+            throw new CommunityException(ErrorCode.INVALID_TOKEN, "Access token is invalid.");
+        }
+
+        // Refresh 토큰을 레디스에서 조회
+        TokenInfo tokenInfoOfRedis = refreshTokenRepository.getRefreshToken(userName)
+                .orElseThrow(() -> new CommunityException(ErrorCode.TOKEN_NOT_FOUND, "Refresh token was not found."));
+        // Refresh 토큰을 레디스에서 삭제
+        refreshTokenRepository.deleteRefreshToken(tokenInfoOfRedis.getUserName());
+
+        // 해당 Access Token 만료시간을 가지고 와서 BlackList 등록
+        Long accessTokenExpiration = JwtTokenUtils.getExpiration(accessToken, accessKey);
+        logoutTokenRepository.setLogoutToken(accessToken, accessTokenExpiration);
+    }
+
+    public TokenInfo reissue(String refreshToken, String userName) {
+        // Refresh 토큰 유효성 검사
+        if (!JwtTokenUtils.isValidated(refreshToken, refreshKey)) {
+            throw new CommunityException(ErrorCode.INVALID_TOKEN, "Refresh token is invalid.");
+        }
+
+        // Refresh 토큰을 레디스에서 조회
+        TokenInfo tokenInfoOfRedis = refreshTokenRepository.getRefreshToken(userName)
+                .orElseThrow(() -> new CommunityException(ErrorCode.TOKEN_NOT_FOUND, "Refresh token was not found."));
+
+        // 레디스의 등록된 Refresh 토큰과 클라이언트에서 보낸 Refresh 토큰을 비교
+        if (!refreshToken.equals(tokenInfoOfRedis.getRefreshToken())) {
+            throw new CommunityException(ErrorCode.TOKEN_NOT_FOUND, "No matching Refresh Token exists.");
+        }
+
+        // Access 토큰과 Refresh 토큰 신규 발급 (RTR: Refresh Token Rotation)
+        TokenInfo newTokenInfo = JwtTokenUtils.generateToken(userName, accessKey, refreshKey, accessExpiredTimeMs, refreshExpiredTimeMs);
+        // 신규 발급 Refresh 토큰을 레디스에 업데이트
+        refreshTokenRepository.setRefreshToken(newTokenInfo);
+
+        return newTokenInfo;
     }
 
     public Page<Alarm> alarmList(Long userId, Pageable pageable) {

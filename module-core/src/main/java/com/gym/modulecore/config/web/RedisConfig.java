@@ -18,6 +18,7 @@ public class RedisConfig {
 
     private final RedisProperties redisProperties;
 
+    // RedisProperties로 yaml에 저장한 host, post를 가지고 와서 연결한다.
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         LettuceConnectionFactory factory = new LettuceConnectionFactory(redisProperties.getHost(), redisProperties.getPort());
@@ -25,6 +26,7 @@ public class RedisConfig {
         return factory;
     }
 
+    // setKeySerializer, setValueSerializer 설정으로 redis-cli를 통해 직접 데이터를 보는게 가능하다.
     @Bean
     public RedisTemplate<String, Object> userRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();

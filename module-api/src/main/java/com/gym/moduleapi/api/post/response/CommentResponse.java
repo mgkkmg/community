@@ -1,6 +1,6 @@
 package com.gym.moduleapi.api.post.response;
 
-import com.gym.modulecore.core.post.model.Comment;
+import com.gym.modulecore.core.post.model.dto.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

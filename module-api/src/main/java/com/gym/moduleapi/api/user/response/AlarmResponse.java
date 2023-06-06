@@ -1,7 +1,7 @@
 package com.gym.moduleapi.api.user.response;
 
-import com.gym.modulecore.core.user.model.Alarm;
-import com.gym.modulecore.core.user.model.AlarmArgs;
+import com.gym.modulecore.core.user.model.dto.Alarm;
+import com.gym.modulecore.core.user.model.dto.AlarmArgs;
 import com.gym.modulecore.core.user.model.enums.AlarmType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

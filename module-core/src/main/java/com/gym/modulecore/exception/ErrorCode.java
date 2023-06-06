@@ -12,6 +12,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not founded"),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "Password is invalid"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Token is invalid"),
+    TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "Token not founded"),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Post not founded"),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "Permission is invalid"),
     ALREADY_LIKED(HttpStatus.CONFLICT, "User already liked the post"),

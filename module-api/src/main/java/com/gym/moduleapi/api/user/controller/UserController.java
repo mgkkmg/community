@@ -1,11 +1,14 @@
 package com.gym.moduleapi.api.user.controller;
 
+import com.gym.moduleapi.api.user.request.TokenRequest;
 import com.gym.moduleapi.api.user.request.UserJoinRequest;
 import com.gym.moduleapi.api.user.request.UserLoginRequest;
 import com.gym.moduleapi.api.user.response.AlarmResponse;
+import com.gym.moduleapi.api.user.response.TokenResponse;
 import com.gym.moduleapi.api.user.response.UserJoinResponse;
 import com.gym.moduleapi.api.user.response.UserLoginResponse;
-import com.gym.modulecore.core.user.model.User;
+import com.gym.modulecore.core.user.model.dto.TokenInfo;
+import com.gym.modulecore.core.user.model.dto.User;
 import com.gym.modulecore.core.user.service.AlarmService;
 import com.gym.modulecore.core.user.service.UserService;
 import com.gym.modulecore.resolver.annotation.UserInfo;
@@ -32,8 +35,19 @@ public class UserController {
 
     @PostMapping("/login")
     public CommonResponse<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
-        String token = userService.login(request.getUserName(), request.getPassword());
-        return CommonResponse.success(new UserLoginResponse(token));
+        TokenInfo tokenInfo = userService.login(request.getUserName(), request.getPassword());
+        return CommonResponse.success(UserLoginResponse.fromUserLogin(tokenInfo));
+    }
+
+    @PostMapping("/logout")
+    public void logout(@RequestBody TokenRequest request, @UserInfo User user) {
+        userService.logout(request.getAccessToken(), user.getUsername());
+    }
+
+    @PostMapping("/reissue")
+    public CommonResponse<TokenResponse> reissue(@RequestBody TokenRequest request, @UserInfo User user) {
+        TokenInfo tokenInfo = userService.reissue(request.getRefreshToken(), user.getUsername());
+        return CommonResponse.success(TokenResponse.fromTokenReissue(tokenInfo));
     }
 
     @GetMapping("/alarm")

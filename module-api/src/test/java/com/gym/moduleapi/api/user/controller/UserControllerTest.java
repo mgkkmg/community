@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gym.moduleapi.api.user.request.UserJoinRequest;
 import com.gym.moduleapi.api.user.request.UserLoginRequest;
 import com.gym.moduleapi.security.annotation.WithMockCustomUser;
-import com.gym.modulecore.core.user.model.User;
+import com.gym.modulecore.core.user.model.dto.TokenInfo;
+import com.gym.modulecore.core.user.model.dto.User;
 import com.gym.modulecore.core.user.service.UserService;
 import com.gym.modulecore.exception.CommunityException;
 import com.gym.modulecore.exception.ErrorCode;
@@ -16,7 +17,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("local")
 @AutoConfigureMockMvc
-@SpringBootTest
+@SpringBootTest(properties = {"jasypt.encryptor.password=communitySystem"}) // VM 옵션값
 class UserControllerTest {
 
     @Autowired
@@ -81,7 +81,7 @@ class UserControllerTest {
         String password = "password";
 
         // mocking
-        when(userService.login(userName, password)).thenReturn("test_token");
+        when(userService.login(userName, password)).thenReturn(mock(TokenInfo.class));
 
         mockMvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)

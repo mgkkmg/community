@@ -5,14 +5,11 @@ import com.gym.moduleapi.api.post.request.PostCommentRequest;
 import com.gym.moduleapi.api.post.request.PostCreateRequest;
 import com.gym.moduleapi.api.post.request.PostModifyRequest;
 import com.gym.moduleapi.security.annotation.WithMockCustomUser;
-import com.gym.modulecore.core.post.model.Post;
+import com.gym.modulecore.core.post.model.dto.Post;
 import com.gym.modulecore.core.post.service.PostService;
-import com.gym.modulecore.core.user.model.User;
-import com.gym.modulecore.core.user.model.entity.UserEntity;
 import com.gym.modulecore.exception.CommunityException;
 import com.gym.modulecore.exception.ErrorCode;
 import fixture.PostEntityFixture;
-import fixture.UserEntityFixture;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,16 +17,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -41,7 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("local")
 @AutoConfigureMockMvc
-@SpringBootTest
+@SpringBootTest(properties = {"jasypt.encryptor.password=communitySystem"}) // VM 옵션값
+//@WebMvcTest(PostController.class)
 public class PostControllerTest {
 
     @Autowired

@@ -1,6 +1,6 @@
 package com.gym.modulecore.resolver;
 
-import com.gym.modulecore.core.user.model.User;
+import com.gym.modulecore.core.user.model.dto.User;
 import com.gym.modulecore.exception.CommunityException;
 import com.gym.modulecore.exception.ErrorCode;
 import com.gym.modulecore.resolver.annotation.UserInfo;

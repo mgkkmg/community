@@ -2,6 +2,10 @@ spring:
   profiles:
     default: local
 
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+
 ---
 spring:
   config:
@@ -31,9 +35,15 @@ spring:
     port: 6379
 
 jwt:
-  secret-key: ENC(ndzgfjpjB0v3t01nqGLS1hYk3AJwaX3B0LSY0ojq3SphRUeurBqSzomPBDVB1sbtLzAW3+5LZ9vu0nsCcHEpBQ==)
   token:
-    expired-time-ms: 2592000000 # 30days
+    access:
+      secret-key: ENC(ndzgfjpjB0v3t01nqGLS1hYk3AJwaX3B0LSY0ojq3SphRUeurBqSzomPBDVB1sbtLzAW3+5LZ9vu0nsCcHEpBQ==)
+      # 30 min
+      expired-time-ms: 1800000
+    refresh:
+      secret-key: ENC(ndzgfjpjB0v3t01nqGLS1hYk3AJwaX3B0LSY0ojq3SphRUeurBqSzomPBDVB1sbtLzAW3+5LZ9vu0nsCcHEpBQ==)
+      # 7 day
+      expired-time-ms: 604800000
 
 ---
 spring:
@@ -64,6 +74,12 @@ spring:
     port: 6379
 
 jwt:
-  secret-key: ENC(ndzgfjpjB0v3t01nqGLS1hYk3AJwaX3B0LSY0ojq3SphRUeurBqSzomPBDVB1sbtLzAW3+5LZ9vu0nsCcHEpBQ==)
   token:
-    expired-time-ms: 2592000000 # 30days
+    access:
+      secret-key: ENC(ndzgfjpjB0v3t01nqGLS1hYk3AJwaX3B0LSY0ojq3SphRUeurBqSzomPBDVB1sbtLzAW3+5LZ9vu0nsCcHEpBQ==)
+      # 30 min
+      expired-time-ms: 1800000
+    refresh:
+      secret-key: ENC(ndzgfjpjB0v3t01nqGLS1hYk3AJwaX3B0LSY0ojq3SphRUeurBqSzomPBDVB1sbtLzAW3+5LZ9vu0nsCcHEpBQ==)
+      # 7 day
+      expired-time-ms: 604800000

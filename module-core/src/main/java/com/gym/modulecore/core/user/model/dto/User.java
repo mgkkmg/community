@@ -1,11 +1,11 @@
-package com.gym.modulecore.core.user.model;
+package com.gym.modulecore.core.user.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gym.modulecore.core.user.model.UserRole;
 import com.gym.modulecore.core.user.model.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

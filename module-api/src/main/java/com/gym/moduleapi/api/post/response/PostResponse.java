@@ -1,7 +1,7 @@
 package com.gym.moduleapi.api.post.response;
 
 import com.gym.moduleapi.api.user.response.UserResponse;
-import com.gym.modulecore.core.post.model.Post;
+import com.gym.modulecore.core.post.model.dto.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

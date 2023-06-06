@@ -1,14 +1,14 @@
 package com.gym.modulecore.core.post.service;
 
-import com.gym.modulecore.core.post.model.Comment;
-import com.gym.modulecore.core.post.model.Post;
+import com.gym.modulecore.core.post.model.dto.Comment;
+import com.gym.modulecore.core.post.model.dto.Post;
 import com.gym.modulecore.core.post.model.entity.CommentEntity;
 import com.gym.modulecore.core.post.model.entity.LikeEntity;
 import com.gym.modulecore.core.post.model.entity.PostEntity;
 import com.gym.modulecore.core.post.repository.CommentEntityRepository;
 import com.gym.modulecore.core.post.repository.LikeEntityRepository;
 import com.gym.modulecore.core.post.repository.PostEntityRepository;
-import com.gym.modulecore.core.user.model.AlarmArgs;
+import com.gym.modulecore.core.user.model.dto.AlarmArgs;
 import com.gym.modulecore.core.user.model.entity.AlarmEntity;
 import com.gym.modulecore.core.user.model.entity.UserEntity;
 import com.gym.modulecore.core.user.model.enums.AlarmType;

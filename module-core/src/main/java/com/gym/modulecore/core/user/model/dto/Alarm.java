@@ -1,4 +1,4 @@
-package com.gym.modulecore.core.user.model;
+package com.gym.modulecore.core.user.model.dto;
 
 import com.gym.modulecore.core.user.model.entity.AlarmEntity;
 import com.gym.modulecore.core.user.model.enums.AlarmType;

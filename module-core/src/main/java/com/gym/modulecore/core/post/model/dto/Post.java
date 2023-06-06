@@ -1,7 +1,7 @@
-package com.gym.modulecore.core.post.model;
+package com.gym.modulecore.core.post.model.dto;
 
 import com.gym.modulecore.core.post.model.entity.PostEntity;
-import com.gym.modulecore.core.user.model.User;
+import com.gym.modulecore.core.user.model.dto.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

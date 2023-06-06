@@ -1,6 +1,7 @@
 package com.gym.modulecore.config.security.filter;
 
-import com.gym.modulecore.core.user.model.User;
+import com.gym.modulecore.core.user.model.dto.User;
+import com.gym.modulecore.core.user.repository.LogoutTokenRepository;
 import com.gym.modulecore.core.user.service.UserService;
 import com.gym.modulecore.util.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    private final String key;
+    private final String accessKey;
     private final UserService userService;
+    private final LogoutTokenRepository logoutTokenRepository;
 
     private final static List<String> TOKEN_IN_PARAM_URLS = List.of("/api/v1/users/alarm/subscribe");
 
@@ -46,15 +48,29 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 token = header.split(" ")[1].trim();
             }
 
-            // check token is valid
-            if (JwtTokenUtils.isExpired(token, key)) {
-                log.error("Key is expired");
+            // AccessToken으로 Redis에서 logout 여부를 확인
+            if (logoutTokenRepository.isLogoutToken(token)) {
+                log.info("Tokens expired on logout");
                 filterChain.doFilter(request, response);
                 return;
             }
 
+            // check token is valid
+            // Access token 만료 시 클라이언트에서 Refresh token 을 사용하여 토큰 재발급
+            if (JwtTokenUtils.isExpired(token, accessKey)) {
+                log.info("Key is expired");
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+//            if (!JwtTokenUtils.isValidated(token, key)) {
+//                log.error("Token is invalid");
+//                filterChain.doFilter(request, response);
+//                return;
+//            }
+
             // get userName from token
-            String userName = JwtTokenUtils.getUserName(token, key);
+            String userName = JwtTokenUtils.getUserName(token, accessKey);
 
             // check the user is valid
             User user = userService.loadUserByUserName(userName);

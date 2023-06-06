@@ -1,6 +1,6 @@
 package com.gym.modulecore.core.user.model.entity;
 
-import com.gym.modulecore.core.user.model.AlarmArgs;
+import com.gym.modulecore.core.user.model.dto.AlarmArgs;
 import com.gym.modulecore.core.user.model.enums.AlarmType;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.gym.moduleapi.security;
 
 import com.gym.moduleapi.security.annotation.WithMockCustomUser;
-import com.gym.modulecore.core.user.model.User;
+import com.gym.modulecore.core.user.model.dto.User;
 import com.gym.modulecore.core.user.model.entity.UserEntity;
 import fixture.UserEntityFixture;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

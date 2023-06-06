@@ -1,4 +1,4 @@
-package com.gym.modulecore.core.post.model;
+package com.gym.modulecore.core.post.model.dto;
 
 import com.gym.modulecore.core.post.model.entity.CommentEntity;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.gym.moduleapi.api.user.response;
 
-import com.gym.modulecore.core.user.model.User;
+import com.gym.modulecore.core.user.model.dto.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
