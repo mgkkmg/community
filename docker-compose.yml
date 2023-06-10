@@ -1,11 +1,16 @@
 version: "3.8"                                  # docker-compose 파일 버전입니다.
 services:                                       # 이 항목 밑에 실행하려는 컨테이너들을 정의
+  community-redis: # 서비스명을 선언합니다.
+    container_name: community-redis             # 컨테이너 명
+    image: redis                                # 도커 허브 아이디 / 도커 이미지 이름
+    ports:
+      - "6379:6379"
   community-app:
     container_name: community-app
     build: .
     depends_on:                                 # REDIS 컨테이너가 실행된 다음 APP을 실행시킨다.
-      - community-redis
+      - redis
     image: kmnine3/community-app
     ports:
-      - "80:8080"
+      - "8080:8080"
     restart: always                             # depends on은 실행 순서만 컨트롤 할뿐, 컨테이너 안의 서비스가 실행가능한 상태인지까지는 확인 하지 않기 때문에 Redis가 아직 실행가능한 상태가 아니여서 실패하는 경우 재시작 하도록 설정

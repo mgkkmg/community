@@ -1,7 +1,7 @@
 spring:
   profiles:
     default: local
-  # Spring Security 의존성을 추가하면 기본적으로 로그인 가능한 id / pasword를 제공해주는데
+  # Spring Security 의존성을 추가하면 기본적으로 로그인 가능한 id / password를 제공해주는데
   # 해당 계정을 직접 설정하여 콘솔에 노출안되게 처리
   security:
     user:
