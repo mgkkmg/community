@@ -71,12 +71,10 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd docker
           sudo rm concal.log
           sudo docker rm - f $(docker ps -qa)
           sudo docker pull ${{ secrets.DOCKER_REPO }}/community-app
           docker-compose up -d
-          sudo docker logs -f community-app &> concal.log &
           docker image prune -f
 
   # time
