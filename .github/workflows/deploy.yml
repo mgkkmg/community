@@ -9,7 +9,7 @@ on:
       - main
 
 permissions:
-  contents: write-all
+  contents: read
 
 # 해당 Workflow의 Job 목록
 jobs:
