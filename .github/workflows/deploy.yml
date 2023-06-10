@@ -75,7 +75,6 @@ jobs:
           sudo docker rm - f $(docker ps -qa)
           sudo docker pull ${{ secrets.DOCKER_REPO }}/community-app
           docker-compose up -d
-          sudo docker logs -f my_community &> concal.log &
           docker image prune -f
 
   # time
