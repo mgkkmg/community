@@ -16,14 +16,12 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
 
+    // RedisProperties로 yaml에 저장한 host, post를 가지고 와서 연결한다.
     private final RedisProperties redisProperties;
 
-    // RedisProperties로 yaml에 저장한 host, post를 가지고 와서 연결한다.
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        LettuceConnectionFactory factory = new LettuceConnectionFactory(redisProperties.getHost(), redisProperties.getPort());
-        factory.afterPropertiesSet();
-        return factory;
+        return new LettuceConnectionFactory(redisProperties.getHost(), redisProperties.getPort());
     }
 
     // setKeySerializer, setValueSerializer 설정으로 redis-cli를 통해 직접 데이터를 보는게 가능하다.

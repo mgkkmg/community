@@ -53,9 +53,15 @@ tasks.jar { enabled = true }
   ex) java -jar module-api-0.0.1-SNAPSHOT.jar
 [Multi Module에서 Gradle 빌드 명령어 + jar 파일 실행 CLI]
 - Gradle 빌드 명령어 :: root project
+  // vm 옵션에 jasypt.encryptor.password 값이 설정되어 있을 경우 추가
   -> ./gradlew clean :module-api:buildNeeded -Pjasypt.encryptor.password=123 --stacktrace --info --refresh-dependencies -x test
+  // 프로퍼티 파일에 jasypt.encryptor.password 값이 설정되어 있을 경우 제외
+  -> ./gradlew clean :module-api:buildNeeded --stacktrace --info --refresh-dependencies -x test
 - profile 지정 X
   -> java -jar module-api/build/libs/app.jar
 - profile 지정 O
+  // vm 옵션에 jasypt.encryptor.password 값이 설정되어 있을 경우 추가
   -> java -jar -Dspring.profiles.active=local -Djasypt.encryptor.password=123 module-api/build/libs/app.jar
+  // 프로퍼티 파일에 jasypt.encryptor.password 값이 설정되어 있을 경우 제외
+  -> java -jar -Dspring.profiles.active=local module-api/build/libs/app.jar
  */

@@ -1,6 +1,12 @@
 spring:
   profiles:
     default: local
+  # Spring Security 의존성을 추가하면 기본적으로 로그인 가능한 id / pasword를 제공해주는데
+  # 해당 계정을 직접 설정하여 콘솔에 노출안되게 처리
+  security:
+    user:
+      name: ENC(ja4wqYSLV5gXdvHNXoW1ZQ==)
+      password: ENC(daqoR41Dk9KfQzsF74LilJ7we0coCPQMVTUiJn9K2jg=)
 
 jasypt:
   encryptor:
@@ -53,9 +59,9 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
-    url: jdbc:mysql://community-database:3306/community
-    username: ENC(Pz95pAXc82ztjV2nYizKcw==)
-    password: ENC(DXUafY6Wwez8jqvGrq6/9LqTw0gjtDjC)
+    url: jdbc:mysql://communitydb-1.cbsohlk1oc4x.ap-northeast-2.rds.amazonaws.com:3306/community
+    username: ENC(jT23So4awUThKjJQt0YQYw==)
+    password: ENC(t3a9sHvfFD8s27ubDH1juaTCN6kupZGZ)
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
