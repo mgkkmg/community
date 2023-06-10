@@ -4,6 +4,7 @@ spring:
   config:
     import:
       - classpath:application-core.yml
+      - classpath:application-secret.properties
 
 ---
 spring:

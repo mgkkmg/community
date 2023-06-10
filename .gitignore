@@ -308,4 +308,9 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+### env file
+.env
+
+# module-core/src/main/resources/application-secret.properties
+
 # End of https://www.toptal.com/developers/gitignore/api/gradle,intellij,intellij+iml,intellij+all,java,windows

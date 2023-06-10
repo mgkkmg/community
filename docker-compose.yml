@@ -8,16 +8,12 @@ services:                                       # 이 항목 밑에 실행하려
     image: kmnine3/community-redis              # 도커 허브 아이디 / 도커 이미지 이름
     ports:
       - "6379:6379"
-  community-database:
-    container_name: community-database
-    build:
-      dockerfile: Dockerfile
-      context: ./database
-    image: kmnine3/community-database           # 도커 허브 아이디 / 도커 이미지 이름
-    environment:                                # 환경 변수
-      - MYSQL_DATABASE=community
-      - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-    volumes:                                    # {호스트}:{컨테이너}
-      - ./database/conf.d:/etc/mysql/conf.d
+  community-app:
+    container_name: community-app
+    build: .
+    depends_on:                                 # REDIS 컨테이너가 실행된 다음 APP을 실행시킨다.
+      - community-redis
+    image: kmnine3/community-app
     ports:
-      - "13306:3306"
+      - "80:8080"
+    restart: always                             # depends on은 실행 순서만 컨트롤 할뿐, 컨테이너 안의 서비스가 실행가능한 상태인지까지는 확인 하지 않기 때문에 Redis가 아직 실행가능한 상태가 아니여서 실패하는 경우 재시작 하도록 설정
