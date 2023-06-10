@@ -72,10 +72,9 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
-        username: ubuntu
+        username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd app
           sudo rm concal.log
           sudo docker rm - f $(docker ps -qa)
           sudo docker pull ${{ secrets.DOCKER_REPO }}/community-app
