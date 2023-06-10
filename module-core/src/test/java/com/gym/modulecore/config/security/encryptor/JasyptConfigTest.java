@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class JasyptConfigTest {
-    private final static String KEY = "communitySystem";
+    private final static String KEY = "";
 
     @Test
     void jasypt_암호화() {
-        String plainText = "nas_ntels_suhyang_ezwel.community-2023.secret_key";
+        String plainText = "";
 
         StandardPBEStringEncryptor jasypt = new StandardPBEStringEncryptor();
         jasypt.setPassword(KEY);
@@ -25,7 +25,7 @@ class JasyptConfigTest {
 
     @Test
     void jasypt_복호화() {
-        String encryptedText = "DXUafY6Wwez8jqvGrq6/9LqTw0gjtDjC";
+        String encryptedText = "";
 
         StandardPBEStringEncryptor jasypt = new StandardPBEStringEncryptor();
         jasypt.setPassword(KEY);
