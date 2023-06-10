@@ -9,7 +9,7 @@ services:                                       # 이 항목 밑에 실행하려
     container_name: community-app
     build: .
     depends_on:                                 # REDIS 컨테이너가 실행된 다음 APP을 실행시킨다.
-      - redis
+      - community-redis
     image: kmnine3/community-app
     ports:
       - "8080:8080"
